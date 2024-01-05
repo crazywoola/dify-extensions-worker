@@ -42,12 +42,15 @@ app.post(
         result: "pong",
       });
     }
+    // ⬇️ impliment your logic here ⬇️
     // point === "app.external_data_tool.query"
-    // impliment your logic here ⬇️
-    
-    // impliment your logic here ⬆️
+    // https://api.breakingbadquotes.xyz/v1/quotes
+    const count = params?.inputs?.count ?? 1;
+    const url = `https://api.breakingbadquotes.xyz/v1/quotes/${count}`;
+    const result = await fetch(url).then(res => res.json())
+    // ⬆️ impliment your logic here ⬆️
     return c.json({
-      result: "bang",
+      result
     });
   }
 );

@@ -67,11 +67,11 @@ This is an example of sending a query request to the endpoint.
     "point": "app.external_data_tool.query",
     "params": {
         "app_id": "61248ab4-1125-45be-ae32-0ce91334d021",
-        "tool_variable": "weather_retrieve",
+        "tool_variable": "breaking_bad_quotes",
         "inputs": {
-            "location": "London"
+            "count": 5
         },
-        "query": "How's the weather today?"
+        "query": "Display the quotes in markdown quote"
     }
 }
 ```
