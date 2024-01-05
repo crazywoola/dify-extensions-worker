@@ -23,7 +23,7 @@ const schema = z.object({
       app_id: z.string().optional(),
       tool_variable: z.string().optional(),
       inputs: z.record(z.any()).optional(),
-      query: z.string().optional(),
+      query: z.any().optional(),  // string or null
     })
     .optional(),
 });
