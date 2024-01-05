@@ -20,10 +20,10 @@ const schema = z.object({
   ]), // Restricts 'point' to two specific values
   params: z
     .object({
-      app_id: z.string(),
-      tool_variable: z.string(),
+      app_id: z.string().optional(),
+      tool_variable: z.string().optional(),
       inputs: z.record(z.any()).optional(),
-      query: z.string(),
+      query: z.string().optional(),
     })
     .optional(),
 });
