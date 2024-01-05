@@ -47,7 +47,7 @@ app.post(
     // https://api.breakingbadquotes.xyz/v1/quotes
     const count = params?.inputs?.count ?? 1;
     const url = `https://api.breakingbadquotes.xyz/v1/quotes/${count}`;
-    const result = await fetch(url).then(res => res.json())
+    const result = await fetch(url).then(res => res.text())
     // ⬆️ impliment your logic here ⬆️
     return c.json({
       result
