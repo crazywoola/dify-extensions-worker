@@ -1,8 +1,8 @@
-name = "-"
+name = "dify-extension-example"
 compatibility_date = "2023-01-01"
 
-# [vars]
-# MY_VARIABLE = "production_value"
+[vars]
+TOKEN = "bananaiscool"
 
 # [[kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"

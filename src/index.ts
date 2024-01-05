@@ -1,9 +1,27 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
+import { bearerAuth } from "hono/bearer-auth";
 
-const app = new Hono()
+type Bindings = {
+  TOKEN: string
+}
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+const app = new Hono<{ Bindings: Bindings }>()
 
-export default app
+app.get("/", (c) => {
+  return c.text("Hello Hono!");
+});
+
+app.post(
+  "/endpoint",
+  (c, next) => {
+    const auth = bearerAuth({ token: c.env.TOKEN });
+    return auth(c, next);
+  },
+  async (c) => {
+    return c.json({
+      result: "pong",
+    });
+  }
+);
+
+export default app;
