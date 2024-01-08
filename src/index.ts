@@ -2,16 +2,13 @@ import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
+import { generateSchema } from '@anatine/zod-openapi';
 
 type Bindings = {
   TOKEN: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
-
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
-});
 
 const schema = z.object({
   point: z.union([
@@ -27,6 +24,12 @@ const schema = z.object({
     })
     .optional(),
 });
+
+// Generate OpenAPI schema
+app.get("/", (c) => {
+  return c.json(generateSchema(schema));
+});
+
 
 app.post(
   "/endpoint",
