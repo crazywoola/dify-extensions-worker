@@ -38,18 +38,20 @@ app.openapi(route, (c) => {
 })
 
 // The OpenAPI documentation will be available at /doc
-app.doc('/doc', {
-  openapi: '3.1.0',
-  info: {
-    version: '1.0.0',
-    title: 'My API',
-    description: 'My API description',
-  },
-  servers: [
-    {
-      url: 'http://localhost:8787',
+app.doc('/doc', c => (
+  {
+    openapi: '3.1.0',
+    info: {
+      version: '1.0.0',
+      title: 'My API',
+      description: 'My API description',
     },
-  ],
-})
+    servers: [
+      {
+        url: new URL(c.req.url).origin,
+      },
+    ],
+  }
+))
 
 export default app
