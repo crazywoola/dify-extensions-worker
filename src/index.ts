@@ -3,8 +3,7 @@ import { z, createRoute, OpenAPIHono } from '@hono/zod-openapi'
 const app = new OpenAPIHono()
 
 const schema = z.object({
-  title: z.string().openapi({ example: 'About today', description: 'Title of the post'}),
-  content: z.string().openapi({ example: 'Today is a good day...', description: 'Content of the post'}),
+  count: z.number().int().positive().openapi({ example: 1, description: 'Number of quotes to get'}),
 })
 
 const responseSchema = z.object({
@@ -13,12 +12,19 @@ const responseSchema = z.object({
 
 const route = createRoute({
   method: 'post',
-  path: '/posts',
-  summary: 'Get posts',
-  description: 'Get posts',
-  operationId: 'getPosts',
+  path: '/quotes',
+  summary: 'Get quotes from breaking bad',
+  description: 'Get quotes from breaking bad',
+  operationId: 'GetQuotesFromBreakingBad',
   request: {
-    params: schema,
+    body: {
+      content: {
+        'application/json': {
+          schema: schema,
+        },
+      },
+      description: '',
+    }, 
   },
   responses: {
     200: {
@@ -32,9 +38,11 @@ const route = createRoute({
   },
 })
 
-app.openapi(route, (c) => {
-  const { title, content } = c.req.valid('param')
-  return c.json({ result: `title: ${title} content: ${content}` })
+app.openapi(route, async (c) => {
+  const { count } = c.req.valid('json')
+  const url = `https://api.breakingbadquotes.xyz/v1/quotes/${count}`;
+  const result = await fetch(url).then(res => res.text())
+  return c.json({ result })
 })
 
 // The OpenAPI documentation will be available at /doc
