@@ -38,7 +38,7 @@ app.openapi(route, (c) => {
 })
 
 // The OpenAPI documentation will be available at /doc
-app.doc('/doc', c => (
+app.doc31('/doc', c => (
   {
     openapi: '3.1.0',
     info: {
