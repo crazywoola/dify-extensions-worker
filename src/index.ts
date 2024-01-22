@@ -3,7 +3,7 @@ import { z, createRoute, OpenAPIHono } from '@hono/zod-openapi'
 const app = new OpenAPIHono()
 
 const schema = z.object({
-  count: z.number().int().positive().openapi({ example: 1, description: 'Number of quotes to get' }),
+  count: z.string().openapi({ example: "1", description: 'Number of quotes to get' }),
 })
 
 const responseSchema = z.object({
