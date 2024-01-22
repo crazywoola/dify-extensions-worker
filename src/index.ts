@@ -3,8 +3,8 @@ import { z, createRoute, OpenAPIHono } from '@hono/zod-openapi'
 const app = new OpenAPIHono()
 
 const schema = z.object({
-  title: z.string().min(1).openapi({ example: 'About today', description: 'Title of the post', deprecated: false }),
-  content: z.string().min(1).openapi({ example: 'Today is a good day...', description: 'Content of the post', deprecated: false }),
+  title: z.string().openapi({ example: 'About today', description: 'Title of the post'}),
+  content: z.string().openapi({ example: 'Today is a good day...', description: 'Content of the post'}),
 })
 
 const responseSchema = z.object({
@@ -12,7 +12,7 @@ const responseSchema = z.object({
 })
 
 const route = createRoute({
-  method: 'get',
+  method: 'post',
   path: '/posts',
   summary: 'Get posts',
   description: 'Get posts',
