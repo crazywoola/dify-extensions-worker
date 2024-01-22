@@ -1,61 +1,55 @@
-import { Hono } from "hono";
-import { bearerAuth } from "hono/bearer-auth";
-import { z } from "zod";
-import { zValidator } from "@hono/zod-validator";
-import { generateSchema } from '@anatine/zod-openapi';
+import { z, createRoute, OpenAPIHono } from '@hono/zod-openapi'
 
-type Bindings = {
-  TOKEN: string;
-};
-
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new OpenAPIHono()
 
 const schema = z.object({
-  point: z.union([
-    z.literal("ping"),
-    z.literal("app.external_data_tool.query"),
-  ]), // Restricts 'point' to two specific values
-  params: z
-    .object({
-      app_id: z.string().optional(),
-      tool_variable: z.string().optional(),
-      inputs: z.record(z.any()).optional(),
-      query: z.any()
-    })
-    .optional(),
-});
+  title: z.string().min(1).openapi({ example: 'About today', description: 'Title of the post', deprecated: false }),
+  content: z.string().min(1).openapi({ example: 'Today is a good day...', description: 'Content of the post', deprecated: false }),
+})
 
-// Generate OpenAPI schema
-app.get("/", (c) => {
-  return c.json(generateSchema(schema));
-});
+const responseSchema = z.object({
+  result: z.string().openapi({ example: 'ok' }),
+})
 
-
-app.post(
-  "/endpoint",
-  (c, next) => {
-    const auth = bearerAuth({ token: c.env.TOKEN });
-    return auth(c, next);
+const route = createRoute({
+  method: 'get',
+  path: '/posts',
+  summary: 'Get posts',
+  description: 'Get posts',
+  operationId: 'getPosts',
+  request: {
+    params: schema,
   },
-  zValidator("json", schema),
-  async (c) => {
-    const { point, params } = c.req.valid("json");
-    if (point === "ping") {
-      return c.json({
-        result: "pong",
-      });
-    }
-    // ⬇️ impliment your logic here ⬇️
-    // point === "app.external_data_tool.query"
-    // https://api.breakingbadquotes.xyz/v1/quotes
-    const count = params?.inputs?.count ?? 1;
-    const url = `https://api.breakingbadquotes.xyz/v1/quotes/${count}`;
-    const result = await fetch(url).then(res => res.text())
-    // ⬆️ impliment your logic here ⬆️
-    return c.json({
-      result
-    });
-  }
-);
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: responseSchema,
+        },
+      },
+      description: '',
+    },
+  },
+})
 
-export default app;
+app.openapi(route, (c) => {
+  const { title, content } = c.req.valid('param')
+  return c.json({ result: `title: ${title} content: ${content}` })
+})
+
+// The OpenAPI documentation will be available at /doc
+app.doc('/doc', {
+  openapi: '3.1.0',
+  info: {
+    version: '1.0.0',
+    title: 'My API',
+    description: 'My API description',
+  },
+  servers: [
+    {
+      url: 'http://localhost:8787',
+    },
+  ],
+})
+
+export default app

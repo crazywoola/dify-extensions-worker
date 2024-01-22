@@ -5,6 +5,8 @@
   },
   "dependencies": {
     "@anatine/zod-openapi": "^2.2.2",
+    "@hono/swagger-ui": "^0.2.1",
+    "@hono/zod-openapi": "^0.9.5",
     "@hono/zod-validator": "^0.1.11",
     "hono": "^3.12.0",
     "zod": "^3.22.4"
